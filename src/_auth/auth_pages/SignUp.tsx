@@ -40,7 +40,7 @@ const SignUp = () => {
     console.log(values)
   }
 
-  const togglePasswordVisibility = (e) => {
+  const togglePasswordVisibility = (e:React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     setIsPasswordVisible((prev) => !prev);
     console.log(isPasswordVisible)
