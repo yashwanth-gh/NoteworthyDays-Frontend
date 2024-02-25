@@ -22,6 +22,7 @@ import { Link } from 'react-router-dom'
 const SignUp = () => {
 
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+  const [isLoading,setIsLoading] = useState(false)
 
   // 1. Define your form.
   const form = useForm<z.infer<typeof SignupValidation>>({
@@ -121,7 +122,7 @@ const SignUp = () => {
                 <i className="fa-solid fa-eye password-vis"></i>)}
             </Button>
           </div>
-          <Button type="submit" className='w-full'>Submit</Button>
+          <Button type="submit" className='w-full' onClick={()=>{setIsLoading((prev)=>!prev)}}>Submit</Button>
         </form>
       </Form>
       <div className='text-center mt-2'>
