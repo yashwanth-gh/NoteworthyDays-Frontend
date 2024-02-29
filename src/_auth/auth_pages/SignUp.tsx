@@ -16,11 +16,13 @@ import {
   FormItem,
   FormLabel,
 } from "@/components/ui/form";
+import authFunctions from "@/api/authApi/auth";
+import { useCreateNewAccount } from "@/lib/tanstack-query/queriesAndMutation";
 
 const SignUp = () => {
   const nameFocusRef = useRef<HTMLInputElement | null>(null);
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
-
+  const {mutateAsync : createNewAcount ,isPending:isCreatingAccount,isError} = useCreateNewAccount();
   useEffect(() => {
     if (nameFocusRef.current) {
       nameFocusRef.current.focus();
@@ -40,8 +42,11 @@ const SignUp = () => {
   // 2. Define a submit handler.
   // Do something with the form values.
   // ✅ This will be type-safe and validated.
-  function onSubmit(values: z.infer<typeof SignupValidation>) {
-    console.log(values);
+  async function onSubmit(values: z.infer<typeof SignupValidation>) {
+    if(!values)return;
+    const newAccount = await createNewAcount(values);
+    console.log(newAccount);
+  
   }
 
   const { formState } = form;
@@ -172,8 +177,9 @@ const SignUp = () => {
           <Button
             type="submit"
             className="w-full"
+            disabled = {isCreatingAccount}
           >
-            Submit
+            {!isCreatingAccount ? "Create Account" : "Loading"}
           </Button>
         </form>
       </Form>
