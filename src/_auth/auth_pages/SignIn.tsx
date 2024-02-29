@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { Input } from "@/components/ui/input"
 import { conf } from '@/conf/conf'
 
@@ -20,8 +20,14 @@ import { Link } from 'react-router-dom'
 
 
 const SignIn = () => {
-
+  const emailFocusRef = useRef<HTMLInputElement | null>(null);
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+
+  useEffect(() => {
+    if (emailFocusRef.current) {
+      emailFocusRef.current.focus();
+    }
+  },[])
 
   // 1. Define your form.
   const form = useForm<z.infer<typeof SigninValidation>>({
@@ -33,20 +39,21 @@ const SignIn = () => {
   })
  
   // 2. Define a submit handler.
+  // Do something with the form values.
+  // ✅ This will be type-safe and validated.
   function onSubmit(values: z.infer<typeof SigninValidation>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
     console.log(values)
   }
+
+  const { formState } = form;
 
   const togglePasswordVisibility = (e:React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     setIsPasswordVisible((prev) => !prev);
-    console.log(isPasswordVisible)
   }
 
   return (
-    <div className='bg-white px-8 lg:px-12 py-4 rounded-lg w-auto h-auto'>
+    <div className='bg-white px-8 lg:px-12 py-4 rounded-lg max-w-[450px] w-full h-auto'>
       <div className='text-center py-4'>
         <h1 className='nothing-you-could-do-regular text-xl'>
           NoteworthyDays!
@@ -71,6 +78,25 @@ const SignIn = () => {
           </div>
         </div>
       </div>
+      <div className="bg-blue-50 border rounded px-2">
+        <ul>
+
+          {formState.errors.email && (
+            <li>
+              <span className="text-red-600 text-xs">
+              ❎ {formState.errors.email.message}
+              </span>
+            </li>
+          )}
+          {formState.errors.password && (
+            <li>
+              <span className="text-red-600 text-xs">
+                ❎ {formState.errors.password.message}
+              </span>
+            </li>
+          )}
+        </ul>
+      </div>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3">
           <FormField
@@ -80,7 +106,11 @@ const SignIn = () => {
               <FormItem>
                 <FormLabel>Email</FormLabel>
                 <FormControl>
-                  <Input placeholder="johnDoe@gmail.com" {...field} />
+                  <Input
+                   placeholder="johnDoe@gmail.com"
+                   autoComplete='new-email'
+                   {...field}
+                   ref={emailFocusRef} />
                 </FormControl>
               </FormItem>
             )}
@@ -95,7 +125,7 @@ const SignIn = () => {
                   <FormItem>
                     <FormLabel>Password</FormLabel>
                     <FormControl>
-                      <Input className="w-full rounded-none rounded-s-lg" placeholder="your password" {...field} type={isPasswordVisible ? "text" : "password"} />
+                      <Input className="w-full rounded-none rounded-s-lg" placeholder="your password" autoComplete='new-password'{...field} type={isPasswordVisible ? "text" : "password"} />
                     </FormControl>
                   </FormItem>
                 )}
