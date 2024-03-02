@@ -18,6 +18,7 @@ import {
 } from "@/components/ui/form";
 import authFunctions from "@/api/authApi/auth";
 import { useCreateNewAccount } from "@/lib/tanstack-query/queriesAndMutation";
+import { getGoogleOAuthURL } from "@/lib/utils";
 
 const SignUp = () => {
   const nameFocusRef = useRef<HTMLInputElement | null>(null);
@@ -54,7 +55,7 @@ const SignUp = () => {
   const togglePasswordVisibility = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     setIsPasswordVisible((prev) => !prev);
-    console.log(isPasswordVisible);
+
   };
 
   return (
@@ -69,10 +70,14 @@ const SignUp = () => {
         <h2 className="font-medium text-2xl ">Create an account</h2>
       </div>
       <div>
-        <Button type="submit" className="w-full">
+        <Link to={getGoogleOAuthURL()}>
+        <Button   
+        type="submit"
+         className="w-full">
           <i className="fa-brands fa-google"></i>&nbsp;&nbsp;Sign in with Google
           +
         </Button>
+        </Link>
         <div className="relative py-3">
           <div className="absolute inset-0 flex items-center">
             <span className="w-full border-t"></span>
