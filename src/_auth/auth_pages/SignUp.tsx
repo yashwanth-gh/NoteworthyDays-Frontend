@@ -16,7 +16,6 @@ import {
   FormItem,
   FormLabel,
 } from "@/components/ui/form";
-import authFunctions from "@/api/authApi/auth";
 import { useCreateNewAccount } from "@/lib/tanstack-query/queriesAndMutation";
 import { getGoogleOAuthURL } from "@/lib/utils";
 
@@ -34,7 +33,7 @@ const SignUp = () => {
   const form = useForm<z.infer<typeof SignupValidation>>({
     resolver: zodResolver(SignupValidation),
     defaultValues: {
-      fullname: "",
+      fullName: "",
       email: "",
       password: "",
     },
@@ -91,10 +90,10 @@ const SignUp = () => {
       </div>
       <div className="bg-blue-50 border rounded px-2">
         <ul>
-          {formState.errors.fullname && (
+          {formState.errors.fullName && (
             <li>
               <span className="text-red-600 text-xs">
-              ❎ {formState.errors.fullname.message}
+              ❎ {formState.errors.fullName.message}
               </span>
             </li>
           )}
@@ -119,7 +118,7 @@ const SignUp = () => {
           <FormField
             control={form.control}
             
-            name="fullname"
+            name="fullName"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Full Name</FormLabel>
