@@ -28,3 +28,13 @@ export function getGoogleOAuthURL() {
   
   return `${conf.googleOauthUri}?${qs.toString()}`;
 }
+
+export function parseCookies(): { [key: string]: string } {
+  const cookies = document.cookie;
+
+  return cookies.split(';').reduce((acc: { [key: string]: string }, cookie) => {
+    const [key, value] = cookie.trim().split('=');
+    acc[key] = decodeURIComponent(value);
+    return acc;
+  }, {});
+}

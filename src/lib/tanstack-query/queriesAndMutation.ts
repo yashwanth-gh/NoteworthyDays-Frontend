@@ -1,5 +1,5 @@
 import authFunctions from "@/api/authApi/auth";
-import { INewUser } from "@/types";
+import { IExistingUser, INewUser } from "@/types";
 import {
     useMutation
 } from "@tanstack/react-query";
@@ -7,5 +7,10 @@ import {
 export const useCreateNewAccount = ()=>{
     return useMutation({
         mutationFn: (userData: INewUser) => authFunctions.createNewAccount(userData)
+    })
+}
+export const useLoginIntoExistingAccount = ()=>{
+    return useMutation({
+        mutationFn: (loginData: IExistingUser) => authFunctions.login(loginData)
     })
 }

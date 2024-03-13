@@ -21,15 +21,19 @@ export class AuthFuctions {
             return response.data;
         } catch (error) {
             console.error('ERROR:: class AuthFunctions :: createNewAccount :: failed to create new account ->', error);
+            throw error;
         }
     }
     
     async login(loginData: IExistingUser) {
         try {
-            const response = await axios.post(`${this.endpoint}/api/v1/users/signup`, loginData);
-            console.log('Response:', response.data);
+            const response = await axios.post(`${this.endpoint}/api/v1/users/signin`, loginData);
+            //TODO:  CHECK FOR NO RESPONSE
+            console.log("response data :::::",response.data)
+            return response.data;
         } catch (error) {
             console.error('ERROR:: class AuthFunctions :: login :: failed to login to account ->', error);
+            throw error;
         }
     }
 

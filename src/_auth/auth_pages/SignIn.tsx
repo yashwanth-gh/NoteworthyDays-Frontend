@@ -16,12 +16,15 @@ import {
   FormLabel,
 } from "@/components/ui/form"
 import { Link } from 'react-router-dom'
+import { useLoginIntoExistingAccount } from '@/lib/tanstack-query/queriesAndMutation'
+import { parseCookies } from '@/lib/utils'
 
 
 
 const SignIn = () => {
   const emailFocusRef = useRef<HTMLInputElement | null>(null);
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+  const {mutateAsync : loginIntoAccount ,isPending:isLogginIntoAccount,isLoginError} = useLoginIntoExistingAccount();
 
   useEffect(() => {
     if (emailFocusRef.current) {
@@ -41,8 +44,12 @@ const SignIn = () => {
   // 2. Define a submit handler.
   // Do something with the form values.
   // ✅ This will be type-safe and validated.
-  function onSubmit(values: z.infer<typeof SigninValidation>) {
-    console.log(values)
+  async function onSubmit(values: z.infer<typeof SigninValidation>) {
+    if(!values)return;
+    const existingAccount = await loginIntoAccount(values);
+    if(!existingAccount)return;
+    const parsedCokkie = parseCookies();
+    console.log("cookie : ",parsedCokkie);
   }
 
   const { formState } = form;
