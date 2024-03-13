@@ -18,6 +18,7 @@ import {
 import { Link } from 'react-router-dom'
 import { useLoginIntoExistingAccount } from '@/lib/tanstack-query/queriesAndMutation'
 import { parseCookies } from '@/lib/utils'
+import authFunctions from '@/api/authApi/auth'
 
 
 
@@ -48,8 +49,11 @@ const SignIn = () => {
     if(!values)return;
     const existingAccount = await loginIntoAccount(values);
     if(!existingAccount)return;
-    const parsedCokkie = parseCookies();
-    console.log("cookie : ",parsedCokkie);
+    // console.log(existingAccount);
+    //FIXME: this is a test api call just to check whether cookies are being sent properly to server again
+    const res = await authFunctions.test(existingAccount?.data?.user?.email || "yashwanth@outlook.com")
+    //*working correctly
+
   }
 
   const { formState } = form;
