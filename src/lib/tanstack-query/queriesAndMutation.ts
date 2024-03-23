@@ -14,3 +14,8 @@ export const useLoginIntoExistingAccount = ()=>{
         mutationFn: (loginData: IExistingUser) => authFunctions.login(loginData)
     })
 }
+export const useVerifyOTP = ()=>{
+    return useMutation({
+        mutationFn: ({email,otp}:{email:string,otp:string}) => authFunctions.verifySentOtp({email,otp})
+    })
+}

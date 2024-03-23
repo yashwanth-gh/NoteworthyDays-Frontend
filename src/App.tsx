@@ -3,7 +3,7 @@ import { Route, Routes } from "react-router-dom";
 import RootLayout from "./_root/RootLayout";
 import { Home } from "./_root/root_pages";
 import AuthLayout from "./_auth/AuthLayout";
-import { SignIn, SignUp } from "./_auth/auth_pages";
+import { SignIn, SignUp, VerifyOTP } from "./_auth/auth_pages";
 
 
 function App() {
@@ -14,6 +14,7 @@ function App() {
         {/* SIGN ROUTES */}
         <Route element={<AuthLayout />}>
           <Route path="/signup" element={<SignUp />} />
+          <Route path="/verify-email" element={<VerifyOTP />} />
           <Route path="/signin" element={<SignIn />} />
         </Route>
 

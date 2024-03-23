@@ -1,7 +1,7 @@
 import React, { useState,useRef, useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { conf } from "@/conf/conf";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 //~ shad cn/ui imports
 import { z } from "zod";
@@ -18,11 +18,14 @@ import {
 } from "@/components/ui/form";
 import { useCreateNewAccount } from "@/lib/tanstack-query/queriesAndMutation";
 import { getGoogleOAuthURL } from "@/lib/utils";
+import MiniLoader from "@/components/shared/MiniLoader";
 
 const SignUp = () => {
   const nameFocusRef = useRef<HTMLInputElement | null>(null);
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const {mutateAsync : createNewAcount ,isPending:isCreatingAccount,isError} = useCreateNewAccount();
+  const navigate = useNavigate();
+
   useEffect(() => {
     if (nameFocusRef.current) {
       nameFocusRef.current.focus();
@@ -45,7 +48,8 @@ const SignUp = () => {
   async function onSubmit(values: z.infer<typeof SignupValidation>) {
     if(!values)return;
     const newAccount = await createNewAcount(values);
-    // console.log(newAccount);
+    console.log(newAccount);
+    navigate("/verify-email",{state:{email:values.email}});
   
   }
 
@@ -183,7 +187,7 @@ const SignUp = () => {
             className="w-full"
             disabled = {isCreatingAccount}
           >
-            {!isCreatingAccount ? "Create Account" : "Loading"}
+            {!isCreatingAccount ? "Create Account" : <MiniLoader/>}
           </Button>
         </form>
       </Form>

@@ -1,12 +1,12 @@
 import * as z from "zod"
 
-const passwordRegex = /^(?=.*[A-Za-z0-9@#%$])[A-Za-z0-9@#%$]{8,}$/;
+const passwordRegex = /^(?=.*[!@#$%^&*()_+{}\[\]:;<>,.?/~\-])(?=.*\d)(?=.*[a-zA-Z]).{8,}$/;
 
 export const SignupValidation = z.object({
     fullName: z.string().min(2, { message: "Name should be atleast 2 characters" }),
     email: z.string().email(),
     password: z.string().refine((value) => passwordRegex.test(value), {
-        message: 'Password must be at least 8 characters and include only numbers, alphabets, and @#%$.',
+        message: 'Password must be at least 8 characters long and contain at least one digit, one alphabetic character, and one special character.',
     })
 })
 export const SigninValidation = z.object({
