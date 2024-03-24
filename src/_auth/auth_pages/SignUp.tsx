@@ -1,6 +1,6 @@
-import React, { useState,useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { Input } from "@/components/ui/input";
-import { conf } from "@/conf/conf";
+// import { conf } from "@/conf/conf";
 import { Link, useNavigate } from "react-router-dom";
 
 //~ shad cn/ui imports
@@ -19,18 +19,24 @@ import {
 import { useCreateNewAccount } from "@/lib/tanstack-query/queriesAndMutation";
 import { getGoogleOAuthURL } from "@/lib/utils";
 import MiniLoader from "@/components/shared/MiniLoader";
+import { useToast } from "@/components/ui/use-toast"
 
 const SignUp = () => {
   const nameFocusRef = useRef<HTMLInputElement | null>(null);
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
-  const {mutateAsync : createNewAcount ,isPending:isCreatingAccount,isError} = useCreateNewAccount();
+  const {
+    mutateAsync: createNewAcount,
+    isPending: isCreatingAccount,
+    isError,
+  } = useCreateNewAccount();
   const navigate = useNavigate();
+  const { toast } = useToast()
 
   useEffect(() => {
     if (nameFocusRef.current) {
       nameFocusRef.current.focus();
     }
-  },[])
+  }, []);
 
   // 1. Define your form.
   const form = useForm<z.infer<typeof SignupValidation>>({
@@ -45,12 +51,21 @@ const SignUp = () => {
   // 2. Define a submit handler.
   // Do something with the form values.
   // ✅ This will be type-safe and validated.
+
   async function onSubmit(values: z.infer<typeof SignupValidation>) {
-    if(!values)return;
+    if (!values) return;
     const newAccount = await createNewAcount(values);
-    console.log(newAccount);
-    navigate("/verify-email",{state:{email:values.email}});
-  
+    // console.log(newAccount);
+    if (newAccount.success) {
+      toast({
+        title: "Please verify your email",
+      });
+      navigate("/verify-email", { state: { email: values.email } });
+      return;
+    }
+    toast({
+      title: "Something went wrong! Try again",
+    });
   }
 
   const { formState } = form;
@@ -58,7 +73,6 @@ const SignUp = () => {
   const togglePasswordVisibility = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     setIsPasswordVisible((prev) => !prev);
-
   };
 
   return (
@@ -74,12 +88,10 @@ const SignUp = () => {
       </div>
       <div>
         <Link to={getGoogleOAuthURL()}>
-        <Button   
-        type="submit"
-         className="w-full">
-          <i className="fa-brands fa-google"></i>&nbsp;&nbsp;Sign in with Google
-          +
-        </Button>
+          <Button type="submit" className="w-full">
+            <i className="fa-brands fa-google"></i>&nbsp;&nbsp;Sign in with
+            Google +
+          </Button>
         </Link>
         <div className="relative py-3">
           <div className="absolute inset-0 flex items-center">
@@ -97,14 +109,14 @@ const SignUp = () => {
           {formState.errors.fullName && (
             <li>
               <span className="text-red-600 text-xs">
-              ❎ {formState.errors.fullName.message}
+                ❎ {formState.errors.fullName.message}
               </span>
             </li>
           )}
           {formState.errors.email && (
             <li>
               <span className="text-red-600 text-xs">
-              ❎ {formState.errors.email.message}
+                ❎ {formState.errors.email.message}
               </span>
             </li>
           )}
@@ -121,13 +133,12 @@ const SignUp = () => {
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3">
           <FormField
             control={form.control}
-            
             name="fullName"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Full Name</FormLabel>
                 <FormControl>
-                  <Input placeholder="John Doe"{...field}  ref={nameFocusRef} />
+                  <Input placeholder="John Doe" {...field} ref={nameFocusRef} />
                 </FormControl>
               </FormItem>
             )}
@@ -182,12 +193,8 @@ const SignUp = () => {
               )}
             </Button>
           </div>
-          <Button
-            type="submit"
-            className="w-full"
-            disabled = {isCreatingAccount}
-          >
-            {!isCreatingAccount ? "Create Account" : <MiniLoader/>}
+          <Button type="submit" className="w-full" disabled={isCreatingAccount}>
+            {!isCreatingAccount ? "Create Account" : <MiniLoader />}
           </Button>
         </form>
       </Form>

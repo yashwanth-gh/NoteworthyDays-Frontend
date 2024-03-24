@@ -1,8 +1,8 @@
 import { conf } from "@/conf/conf";
 import { axiosRequest } from "@/lib/utils";
 import { IExistingUser, INewUser, backendResponse } from "@/types";
-import axios, { AxiosRequestConfig } from 'axios';
-import { string } from "zod";
+import { AxiosRequestConfig } from 'axios';
+// import { string } from "zod";
 
 /* This is the class For writing all the functions required To authenticate user
 A object is already created. Now the object is exported. And you can just Use 
@@ -78,6 +78,7 @@ export class AuthFuctions {
         }
         return { success: true, message: response.data.message }
     }
+
 
         async login(loginData: IExistingUser) {
 

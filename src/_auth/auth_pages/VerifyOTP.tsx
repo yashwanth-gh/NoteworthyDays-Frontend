@@ -1,31 +1,56 @@
 import { Button } from "@/components/ui/button";
-import React from "react";
+import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import Countdown from "react-countdown";
 import { useVerifyOTP } from "@/lib/tanstack-query/queriesAndMutation";
 import MiniLoader from "@/components/shared/MiniLoader";
+import authFunctions from "@/api/authApi/auth";
+import { useToast } from "@/components/ui/use-toast";
 
 const VerifyOTP = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const { email } = location.state || {email:"yashwanthbm36@gmail.com"};
-  const {mutateAsync : verifyOTP ,isPending:isVerifyingOTP,isError} = useVerifyOTP();
-
+  const { email }: { email: string } = location.state || {
+    email: "yashwanthbm36@gmail.com",
+  };
+  const {
+    mutateAsync: verifyOTP,
+    isPending: isVerifyingOTP,
+    isError,
+  } = useVerifyOTP();
+  const { toast } = useToast();
+  const [countdownKey, setCountdownKey] = useState(Date.now());
 
   const handleFormSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const formData = new FormData(event.target as HTMLFormElement);
-    const otp = formData.get('otp') as string;
-    const response = await verifyOTP({email,otp});
-    if(response.message){
-        navigate("/signin")
+    const otp = formData.get("otp") as string;
+    const response = await verifyOTP({ email, otp });
+    if (response.message) {
+      navigate("/signin");
     }
-    navigate("/signin")
+    navigate("/signin");
   };
-//   ------------------------ below code is regarding resend timer ------------------------
+
+  async function handleResendOTP() {
+    const isOtpSent = await authFunctions.sendOtpToVerifyNewAccount(email);
+    if (isOtpSent.success) {
+      toast({
+        title: "OTP resent! check you mail",
+      });
+    } else {
+      toast({
+        title: "Something went wrong! try agin after some time",
+      });
+    }
+    //FIXME: ensure that the timer does not start again from the beginning when the page is refreshed 
+    setCountdownKey(Date.now());
+  }
+
+  //   ------------------------ below code is regarding resend timer ------------------------
   const Completionist = () => (
     <span>
-      <a href="" className="text-blue-400">
+      <a onClick={handleResendOTP} className="text-blue-400">
         Resend
       </a>
     </span>
@@ -53,7 +78,7 @@ const VerifyOTP = () => {
       );
     }
   };
-//   ------------------------ above code is regarding resend timer ------------------------
+  //   ------------------------ above code is regarding resend timer ------------------------
 
   return (
     <div className="bg-white px-8 lg:px-12 py-4 rounded-lg max-w-[450px] w-full h-auto">
@@ -82,7 +107,7 @@ const VerifyOTP = () => {
             className="w-full text-white py-2 rounded-md mb-2"
             disabled={isVerifyingOTP}
           >
-            {isVerifyingOTP ? <MiniLoader/> : "Verify"}
+            {isVerifyingOTP ? <MiniLoader /> : "Verify"}
           </Button>
           <Button
             type="button"
@@ -99,7 +124,11 @@ const VerifyOTP = () => {
         <div>
           <p className="font-semi text-xs ">
             resend OTP in?&nbsp;
-            <Countdown date={Date.now() + 65000} renderer={renderer} />
+            <Countdown
+              key={countdownKey}
+              date={Date.now() + 63000}
+              renderer={renderer}
+            />
           </p>
         </div>
         <div>

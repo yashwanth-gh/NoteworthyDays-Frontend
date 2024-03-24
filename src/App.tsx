@@ -1,10 +1,10 @@
-import React from "react";
+
 import { Route, Routes } from "react-router-dom";
 import RootLayout from "./_root/RootLayout";
 import { Home } from "./_root/root_pages";
 import AuthLayout from "./_auth/AuthLayout";
 import { SignIn, SignUp, VerifyOTP } from "./_auth/auth_pages";
-
+import { Toaster } from "@/components/ui/toaster"
 
 function App() {
   return (
@@ -23,7 +23,7 @@ function App() {
           <Route index element={<Home />} />
         </Route>
       </Routes>
-
+      <Toaster />
     </main>
   );
 }
