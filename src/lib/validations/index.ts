@@ -6,10 +6,20 @@ export const SignupValidation = z.object({
     fullName: z.string().min(2, { message: "Name should be atleast 2 characters" }),
     email: z.string().email(),
     password: z.string().refine((value) => passwordRegex.test(value), {
-        message: 'Password must be at least 8 characters long and contain at least one digit, one alphabetic character, and one special character.',
+        message: 'Password must be 8+ characters with a digit, letter, and special character.',
     })
 })
 export const SigninValidation = z.object({
     email: z.string().email(),
     password: z.string(),
 })
+
+export const resetPaaswordValidation = z.object({
+    newPassword: z.string().refine((value) => passwordRegex.test(value), {
+        message: 'Password must be 8+ characters with a digit, letter, and special character.',
+    }),
+    confirmPassword: z.string(),
+}).refine((data) => data.newPassword === data.confirmPassword, {
+    message: "Passwords don't match",
+    path: ["confirmPassword"],
+});

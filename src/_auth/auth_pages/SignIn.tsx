@@ -1,37 +1,39 @@
-import React, { useEffect, useRef, useState } from 'react'
-import { Input } from "@/components/ui/input"
-import { conf } from '@/conf/conf'
+import React, { useEffect, useRef, useState } from "react";
+import { Input } from "@/components/ui/input";
+import { conf } from "@/conf/conf";
 
 //~ shad cn/ui imports
-import { z } from "zod"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
-import { SigninValidation } from '@/lib/validations'
-import { Button } from "@/components/ui/button"
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { SigninValidation } from "@/lib/validations";
+import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
   FormField,
   FormItem,
   FormLabel,
-} from "@/components/ui/form"
-import { Link } from 'react-router-dom'
-import { useLoginIntoExistingAccount } from '@/lib/tanstack-query/queriesAndMutation'
-import { parseCookies } from '@/lib/utils'
-import authFunctions from '@/api/authApi/auth'
-
-
+} from "@/components/ui/form";
+import { Link } from "react-router-dom";
+import { useLoginIntoExistingAccount } from "@/lib/tanstack-query/queriesAndMutation";
+import { parseCookies } from "@/lib/utils";
+import authFunctions from "@/api/authApi/auth";
 
 const SignIn = () => {
   const emailFocusRef = useRef<HTMLInputElement | null>(null);
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
-  const {mutateAsync : loginIntoAccount ,isPending:isLogginIntoAccount,isLoginError} = useLoginIntoExistingAccount();
+  const {
+    mutateAsync: loginIntoAccount,
+    isPending: isLogginIntoAccount,
+    isLoginError,
+  } = useLoginIntoExistingAccount();
 
   useEffect(() => {
     if (emailFocusRef.current) {
       emailFocusRef.current.focus();
     }
-  },[])
+  }, []);
 
   // 1. Define your form.
   const form = useForm<z.infer<typeof SigninValidation>>({
@@ -40,62 +42,63 @@ const SignIn = () => {
       email: "",
       password: "",
     },
-  })
- 
+  });
+
   // 2. Define a submit handler.
   // Do something with the form values.
   // ✅ This will be type-safe and validated.
   async function onSubmit(values: z.infer<typeof SigninValidation>) {
-    if(!values)return;
+    if (!values) return;
     const existingAccount = await loginIntoAccount(values);
-    if(!existingAccount)return;
+    if (!existingAccount) return;
     // console.log(existingAccount);
     //FIXME: this is a test api call just to check whether cookies are being sent properly to server again
-    const res = await authFunctions.test(existingAccount?.data?.user?.email || "yashwanth@outlook.com")
+    const res = await authFunctions.test(
+      existingAccount?.data?.user?.email || "yashwanth@outlook.com"
+    );
     //*working correctly
-
   }
 
   const { formState } = form;
 
-  const togglePasswordVisibility = (e:React.MouseEvent<HTMLButtonElement>) => {
+  const togglePasswordVisibility = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     setIsPasswordVisible((prev) => !prev);
-  }
+  };
 
   return (
-    <div className='bg-white px-8 lg:px-12 py-4 rounded-lg max-w-[450px] w-full h-auto'>
-      <div className='text-center py-4'>
-        <h1 className='nothing-you-could-do-regular text-xl'>
-          NoteworthyDays!
+    <div className="bg-white px-8 lg:px-12 py-4 rounded-lg max-w-[450px] w-full h-auto">
+      <div className="text-center py-4">
+        <h1 className="nothing-you-could-do-regular text-xl">
+          Noteworthy<span className="text-red-600">Days!</span>
         </h1>
-        <p className='font-thin text-lg '>
+        <p className="font-thin text-lg ">
           Never miss any important Day again!
         </p>
-        <h2 className='font-medium text-2xl '>
-          Signin to existing account
-        </h2>
+        <h2 className="font-medium text-2xl ">Signin to existing account</h2>
       </div>
       <div>
-        <Button type="submit" className='w-full'>
-          <i className="fa-brands fa-google"></i>&nbsp;&nbsp;Sign in with Google +
+        <Button type="submit" className="w-full">
+          <i className="fa-brands fa-google"></i>&nbsp;&nbsp;Sign in with Google
+          +
         </Button>
         <div className="relative py-3">
           <div className="absolute inset-0 flex items-center">
             <span className="w-full border-t"></span>
           </div>
           <div className="relative flex justify-center text-xs uppercase">
-            <span className="bg-white px-2 text-muted-foreground">Or continue with</span>
+            <span className="bg-white px-2 text-muted-foreground">
+              Or continue with
+            </span>
           </div>
         </div>
       </div>
       <div className="bg-blue-50 border rounded px-2">
         <ul>
-
           {formState.errors.email && (
             <li>
               <span className="text-red-600 text-xs">
-              ❎ {formState.errors.email.message}
+                ❎ {formState.errors.email.message}
               </span>
             </li>
           )}
@@ -118,10 +121,11 @@ const SignIn = () => {
                 <FormLabel>Email</FormLabel>
                 <FormControl>
                   <Input
-                   placeholder="johnDoe@gmail.com"
-                   autoComplete='new-email'
-                   {...field}
-                   ref={emailFocusRef} />
+                    placeholder="johnDoe@gmail.com"
+                    autoComplete="new-email"
+                    {...field}
+                    ref={emailFocusRef}
+                  />
                 </FormControl>
               </FormItem>
             )}
@@ -136,32 +140,55 @@ const SignIn = () => {
                   <FormItem>
                     <FormLabel>Password</FormLabel>
                     <FormControl>
-                      <Input className="w-full rounded-none rounded-s-lg" placeholder="your password" autoComplete='new-password'{...field} type={isPasswordVisible ? "text" : "password"} />
+                      <Input
+                        className="w-full rounded-none rounded-s-lg"
+                        placeholder="your password"
+                        autoComplete="new-password"
+                        {...field}
+                        type={isPasswordVisible ? "text" : "password"}
+                      />
                     </FormControl>
                   </FormItem>
                 )}
               />
             </div>
-            <Button type="submit" className='w-auto ml-auto rounded-none rounded-e-lg bg-white border hover:bg-transparent' onClick={togglePasswordVisibility}>
+            <Button
+              type="submit"
+              className="w-auto ml-auto rounded-none rounded-e-lg bg-white border hover:bg-transparent"
+              onClick={togglePasswordVisibility}
+            >
               {isPasswordVisible ? (
                 <i className="fa-solid fa-eye-slash password-vis"></i>
               ) : (
-                <i className="fa-solid fa-eye password-vis"></i>)}
+                <i className="fa-solid fa-eye password-vis"></i>
+              )}
             </Button>
           </div>
-          <Button type="submit" className='w-full'>Submit</Button>
+
+          <Button type="submit" className="w-full">
+            Submit
+          </Button>
         </form>
       </Form>
-      <div className='text-center mt-2'>
-        <p className='font-thin text-sm'>
-          Don't have an account?&nbsp;
-          <Link to={"/signup"} className='text-blue-700 font-normal'>
-            Sign Up
-          </Link>
-        </p>
+      <div className="flex justify-between items-center">
+        <div className="text-center mt-2">
+          <p className="font-thin text-sm">
+            Don't have an account?&nbsp;
+            <Link to={"/signup"} className="text-blue-700 font-normal">
+              Sign Up
+            </Link>
+          </p>
+        </div>
+        <div className="text-center mt-2">
+          <p className="font-thin text-sm">
+            <Link to={""} className="text-blue-700 font-normal">
+            Forgot password?
+            </Link>
+          </p>
+        </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default SignIn
+export default SignIn;

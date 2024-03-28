@@ -1,9 +1,9 @@
 
 import { Route, Routes } from "react-router-dom";
 import RootLayout from "./_root/RootLayout";
-import { Home } from "./_root/root_pages";
+import { Account, Home } from "./_root/root_pages";
 import AuthLayout from "./_auth/AuthLayout";
-import { SignIn, SignUp, VerifyOTP } from "./_auth/auth_pages";
+import { ResetPassword, SignIn, SignUp, VerifyOTP } from "./_auth/auth_pages";
 import { Toaster } from "@/components/ui/toaster"
 
 function App() {
@@ -16,11 +16,13 @@ function App() {
           <Route path="/signup" element={<SignUp />} />
           <Route path="/verify-email" element={<VerifyOTP />} />
           <Route path="/signin" element={<SignIn />} />
+          <Route path="/resetPassword" element={<ResetPassword />} />
         </Route>
 
         {/* SECURE ROUTES */}
         <Route element={<RootLayout />}>
           <Route index element={<Home />} />
+          <Route path="/account" element={<Account />} />
         </Route>
       </Routes>
       <Toaster />

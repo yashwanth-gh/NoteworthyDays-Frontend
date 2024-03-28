@@ -84,7 +84,7 @@ const VerifyOTP = () => {
     <div className="bg-white px-8 lg:px-12 py-4 rounded-lg max-w-[450px] w-full h-auto">
       <div className="text-center py-4 mb-6">
         <h1 className="nothing-you-could-do-regular text-2xl mb-4">
-          NoteworthyDays!
+          Noteworthy<span className="text-red-600">Days!</span>
         </h1>
         <h2 className="font-medium text-2xl mb-2">OTP verification</h2>
         <p className="font-thin text-sm ">

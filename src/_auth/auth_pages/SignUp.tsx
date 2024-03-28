@@ -79,7 +79,7 @@ const SignUp = () => {
     <div className="bg-white px-8 lg:px-12 py-3 rounded-lg max-w-[450px] w-full h-auto">
       <div className="text-center py-4">
         <h1 className="nothing-you-could-do-regular text-xl">
-          NoteworthyDays!
+          Noteworthy<span className="text-red-600">Days!</span>
         </h1>
         <p className="font-thin text-lg ">
           Never miss any important Day again!
