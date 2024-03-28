@@ -11,21 +11,26 @@ import React from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { resetPaaswordValidation } from "@/lib/validations";
+import { resetPasswordValidation } from "@/lib/validations";
 import { z } from "zod";
+import { useResetforgottenPassword } from "@/lib/tanstack-query/queriesAndMutation";
+import { useToast } from "@/components/ui/use-toast";
+import MiniLoader from "@/components/shared/MiniLoader";
 
 const ResetPassword = () => {
+  const {mutateAsync:resetPassword,isPending:isResetingPassword,isError} = useResetforgottenPassword();
+  const {toast} = useToast();
   const navigate = useNavigate();
   // Get the current location object
   const location = useLocation();
   // Extract query parameters from location.search
   const searchParams = new URLSearchParams(location.search);
   // Get the 'resetToken' query parameter
-  const resetToken = searchParams.get("resetToken");
+  const resetToken = searchParams.get("resetToken") as string;
 
   // 1. Define your form.
-  const form = useForm<z.infer<typeof resetPaaswordValidation>>({
-    resolver: zodResolver(resetPaaswordValidation),
+  const form = useForm<z.infer<typeof resetPasswordValidation>>({
+    resolver: zodResolver(resetPasswordValidation),
     defaultValues: {
       newPassword: "",
       confirmPassword: "",
@@ -33,13 +38,43 @@ const ResetPassword = () => {
   });
 
   // 2. Define a submit handler.
-  function onSubmit(values: z.infer<typeof resetPaaswordValidation>) {
+  async function onSubmit(values: z.infer<typeof resetPasswordValidation>) {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
-    console.log(values);
+    if(!values.newPassword || !values.confirmPassword) return;
+    const password = values.confirmPassword;
+    const res = await resetPassword({resetToken,password});
+    if(res.success){
+      toast({
+        title: "Password reset successfully",
+        description: "You can now login with your new password",
+      });
+      navigate("/signin");
+    }else{
+      toast({
+        title: "Password reset failed",
+        description: "Please try again",
+      });
+    }
   }
 
   const { formState } = form;
+
+if(isError){
+  return (
+    <div className="bg-white px-8 lg:px-12 py-4 rounded-lg max-w-[450px] w-full h-auto">
+    <div className="text-center py-4 mb-3">
+      <h1 className="nothing-you-could-do-regular text-2xl mb-4">
+        Noteworthy<span className="text-red-600">Days!</span>
+      </h1>
+      <h2 className="font-medium text-2xl mb-2 text-red-500">Reset Your Passwrod</h2>
+      <p className="font-regular text-sm text-red-500">
+        Error reseting password, Please try again after some time!
+      </p>
+    </div>
+  </div>
+  )
+}
 
   return (
     <div className="bg-white px-8 lg:px-12 py-4 rounded-lg max-w-[450px] w-full h-auto">
@@ -101,18 +136,12 @@ const ResetPassword = () => {
             <Button
               type="submit"
               className="w-full text-white py-2 rounded-md mb-2"
+              disabled={isResetingPassword}
             >
-              Submit
+              {isResetingPassword ? <MiniLoader/> : "Reset Password"}
             </Button>
           </form>
         </Form>
-      </div>
-      <div className="flex flex-col items-center mt-2 gap-1">
-        <div>
-          <p className="font-semi text-xs text-gray-400">
-            OTP expires in 10 minutes
-          </p>
-        </div>
       </div>
     </div>
   );

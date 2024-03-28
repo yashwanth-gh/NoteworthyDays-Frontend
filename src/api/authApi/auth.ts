@@ -79,6 +79,38 @@ export class AuthFuctions {
         return { success: true, message: response.data.message }
     }
 
+    async forgotPassword(email:string){
+        const config: AxiosRequestConfig = {
+            method: 'POST',
+            url: '/api/v1/users/forgot-password',
+            data: { email }
+        };
+
+        const response = await axiosRequest(config);
+
+        const responseData: backendResponse = response.data;
+
+        if (responseData.statusCode >= 400 && responseData.statusCode <= 500) {
+            return { success: false, message: responseData.message }
+        }
+        return { success: true, message: responseData.message }
+    }
+
+    async resetforgottenPassword({ resetToken, password }: { resetToken: string, password: string }) {
+        const config: AxiosRequestConfig = {
+            method: 'POST',
+            url: `/api/v1/users/forgot-reset-password?resetToken=${resetToken}`,
+            data: { password }
+        };
+
+        const response = await axiosRequest(config);
+        const responseData: backendResponse = response.data;
+
+        if (responseData.statusCode >= 400 && responseData.statusCode <= 500) {
+            return { success: false, message: responseData.message }
+        }
+        return { success: true, message: responseData.message }
+    }
 
         async login(loginData: IExistingUser) {
 

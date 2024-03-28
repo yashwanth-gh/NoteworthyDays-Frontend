@@ -181,7 +181,7 @@ const SignIn = () => {
         </div>
         <div className="text-center mt-2">
           <p className="font-thin text-sm">
-            <Link to={""} className="text-blue-700 font-normal">
+            <Link to={"/forgotPassword"} className="text-blue-700 font-normal">
             Forgot password?
             </Link>
           </p>
