@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Input } from "@/components/ui/input";
-import { conf } from "@/conf/conf";
 
 //~ shad cn/ui imports
 import { z } from "zod";
@@ -15,10 +14,8 @@ import {
   FormItem,
   FormLabel,
 } from "@/components/ui/form";
-import { Link } from "react-router-dom";
+import { Link,useNavigate,useLocation } from "react-router-dom";
 import { useLoginIntoExistingAccount } from "@/lib/tanstack-query/queriesAndMutation";
-import { parseCookies } from "@/lib/utils";
-import authFunctions from "@/api/authApi/auth";
 
 const SignIn = () => {
   const emailFocusRef = useRef<HTMLInputElement | null>(null);
@@ -26,8 +23,11 @@ const SignIn = () => {
   const {
     mutateAsync: loginIntoAccount,
     isPending: isLogginIntoAccount,
-    isLoginError,
+    isError : isLoginError,
   } = useLoginIntoExistingAccount();
+  const location = useLocation();
+  const navigate = useNavigate();
+  const fromLocation = location.state?.from?.pathname || "/";
 
   useEffect(() => {
     if (emailFocusRef.current) {
@@ -51,11 +51,8 @@ const SignIn = () => {
     if (!values) return;
     const existingAccount = await loginIntoAccount(values);
     if (!existingAccount) return;
-    // console.log(existingAccount);
-    //FIXME: this is a test api call just to check whether cookies are being sent properly to server again
-    const res = await authFunctions.test(
-      existingAccount?.data?.user?.email || "yashwanth@outlook.com"
-    );
+    navigate(fromLocation, { replace: true });
+    
     //*working correctly
   }
 

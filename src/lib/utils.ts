@@ -13,8 +13,6 @@ export const axiosInstanceForBackend = axios.create({
   baseURL: conf.serverEndpoint,
 })
 
-
-
 export async function axiosRequest(config: AxiosRequestConfig) {
   try {
 

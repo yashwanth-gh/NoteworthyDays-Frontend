@@ -1,7 +1,8 @@
 import { Button } from "@/components/ui/button";
-import React from "react";
+import { Link, useLocation } from "react-router-dom";
 
 const Topbar = () => {
+  const location = useLocation();
   return (
     <div className="topbar">
       <div>
@@ -13,11 +14,15 @@ const Topbar = () => {
       <div className="flex gap-2">
         <div>
           {/* add login button here */}
+          <Link to={"/signin"} state={{from:location}} replace>
           <Button className='rounded-full px-6'>Login</Button>
+          </Link>
         </div>
         <div>
           {/* add signup button here */}
+          <Link to={"/signup"}>
           <Button className=" rounded-full">Sign Up</Button>
+          </Link>
         </div>
       </div>
     </div>

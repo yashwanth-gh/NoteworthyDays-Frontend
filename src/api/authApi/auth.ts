@@ -21,7 +21,7 @@ export class AuthFuctions {
 
         const config: AxiosRequestConfig = {
             method: 'POST',
-            url: '/api/v1/users/signup',
+            url: '/api/v1/auth/signup',
             data: userData
         };
 
@@ -49,7 +49,7 @@ export class AuthFuctions {
 
         const config: AxiosRequestConfig = {
             method: 'POST',
-            url: '/api/v1/users/send-otp-to-mail',
+            url: '/api/v1/auth/send-otp-to-mail',
             data: { email }
         };
 
@@ -66,7 +66,7 @@ export class AuthFuctions {
     async verifySentOtp({ email, otp }: { email: string, otp: string }) {
         const config: AxiosRequestConfig = {
             method: 'POST',
-            url: '/api/v1/users/verify-otp',
+            url: '/api/v1/auth/verify-otp',
             data: { email, otp }
         };
 
@@ -79,10 +79,10 @@ export class AuthFuctions {
         return { success: true, message: response.data.message }
     }
 
-    async forgotPassword(email:string){
+    async forgotPassword(email: string) {
         const config: AxiosRequestConfig = {
             method: 'POST',
-            url: '/api/v1/users/forgot-password',
+            url: '/api/v1/auth/forgot-password',
             data: { email }
         };
 
@@ -99,7 +99,7 @@ export class AuthFuctions {
     async resetforgottenPassword({ resetToken, password }: { resetToken: string, password: string }) {
         const config: AxiosRequestConfig = {
             method: 'POST',
-            url: `/api/v1/users/forgot-reset-password?resetToken=${resetToken}`,
+            url: `/api/v1/auth/forgot-reset-password?resetToken=${resetToken}`,
             data: { password }
         };
 
@@ -112,9 +112,21 @@ export class AuthFuctions {
         return { success: true, message: responseData.message }
     }
 
-        async login(loginData: IExistingUser) {
+    async login(loginData: IExistingUser) {
+        const config: AxiosRequestConfig = {
+            method: 'POST',
+            url: `/api/v1/auth/signin`,
+            data: { loginData }
+        };
 
+        const response = await axiosRequest(config);
+        const responseData: backendResponse = response.data;
+
+        if (responseData.statusCode >= 400 && responseData.statusCode <= 500) {
+            return { success: false, message: responseData.message }
         }
+        return { success: true, message: responseData.message }
+    }
 
 
 }
