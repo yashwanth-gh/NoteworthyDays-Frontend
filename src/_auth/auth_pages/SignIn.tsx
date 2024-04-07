@@ -14,20 +14,26 @@ import {
   FormItem,
   FormLabel,
 } from "@/components/ui/form";
-import { Link,useNavigate,useLocation } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useLoginIntoExistingAccount } from "@/lib/tanstack-query/queriesAndMutation";
+import { useToast } from "@/components/ui/use-toast";
+import MiniLoader from "@/components/shared/MiniLoader";
+import { useAppDispatch } from "@/redux/hooks";
+import { AuthState, setAuth } from "@/redux/slices/authSlice";
 
 const SignIn = () => {
+
   const emailFocusRef = useRef<HTMLInputElement | null>(null);
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const {
     mutateAsync: loginIntoAccount,
     isPending: isLogginIntoAccount,
-    isError : isLoginError,
   } = useLoginIntoExistingAccount();
   const location = useLocation();
   const navigate = useNavigate();
   const fromLocation = location.state?.from?.pathname || "/";
+  const { toast } = useToast();
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
     if (emailFocusRef.current) {
@@ -49,10 +55,32 @@ const SignIn = () => {
   // ✅ This will be type-safe and validated.
   async function onSubmit(values: z.infer<typeof SigninValidation>) {
     if (!values) return;
+
     const existingAccount = await loginIntoAccount(values);
-    if (!existingAccount) return;
+
+    if (!existingAccount.success) {
+      return toast({
+        title: "Error",
+        description: "Please, Try again!",
+        variant: "destructive",
+      });
+    }
+
+    console.log(existingAccount.data);
+
+    const newUserData:AuthState = {
+      id:existingAccount.data?._id,
+      fullName:existingAccount.data?.fullName,
+      email:existingAccount.data?.email,
+      profilePicUrl:existingAccount.data?.profilePictureUrl || '/public/defaultProfile.svg',
+      isLoggedIn:true,
+      isVerified:existingAccount.data?.is_email_verified,
+      role:existingAccount.data?.role?.role_type,
+      accountStatus:existingAccount.data?.account_status
+    }
+    dispatch(setAuth(newUserData))
     navigate(fromLocation, { replace: true });
-    
+
     //*working correctly
   }
 
@@ -162,8 +190,15 @@ const SignIn = () => {
             </Button>
           </div>
 
-          <Button type="submit" className="w-full">
-            Submit
+          <Button
+          type="submit" 
+          className="w-full"
+          disabled={isLogginIntoAccount} >
+            {
+              !isLogginIntoAccount
+              ?"Sign in"
+              :<MiniLoader/>
+            }
           </Button>
         </form>
       </Form>
@@ -179,7 +214,7 @@ const SignIn = () => {
         <div className="text-center mt-2">
           <p className="font-thin text-sm">
             <Link to={"/forgotPassword"} className="text-blue-700 font-normal">
-            Forgot password?
+              Forgot password?
             </Link>
           </p>
         </div>

@@ -21,25 +21,31 @@ export async function axiosRequest(config: AxiosRequestConfig) {
 
     // Handle successful response
     // console.log('Response:', response.data);
-    return { success: true, data: response.data, error: null };
+    return { statusCode: response.status, success: true, data: response.data, error: null };
 
   } catch (error: any) {
     // Handle error
+    let statusCode:number;
+
     if (error.response) {
       // The request was made and the server responded with a status code
       // that falls out of the range of 2xx
-      console.error('Server Error:', error.response.status);
+      statusCode = error.response.status;
+      console.error('Server Error:', statusCode);
       console.error('Data:', error.response.data);
       console.error('Headers:', error.response.headers);
     } else if (error.request) {
       // The request was made but no response was received
       console.error('Request Error:', error.request);
+      statusCode = 500; // Set a generic status code for request errors
     } else {
       // Something happened in setting up the request that triggered an Error
       console.error('Error:', error.message);
+      statusCode = 500; // Set a generic status code for other errors
     }
     console.error('Config:', error.config);
-    return { success: false, data: null, error: error.message };
+
+    return { statusCode, success: false, data: null, error: error.message };
   }
 }
 

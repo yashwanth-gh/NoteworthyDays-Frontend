@@ -44,7 +44,6 @@ export class AuthFuctions {
         return { success: true, message: isOtpSent.message };
     }
 
-
     async sendOtpToVerifyNewAccount(email: string) {
 
         const config: AxiosRequestConfig = {
@@ -116,16 +115,16 @@ export class AuthFuctions {
         const config: AxiosRequestConfig = {
             method: 'POST',
             url: `/api/v1/auth/signin`,
-            data: { loginData }
+            data: loginData
         };
 
         const response = await axiosRequest(config);
         const responseData: backendResponse = response.data;
 
-        if (responseData.statusCode >= 400 && responseData.statusCode <= 500) {
-            return { success: false, message: responseData.message }
+        if (response.statusCode >= 400 && response.statusCode <= 500) {
+            return { success: false, message: response.error };
         }
-        return { success: true, message: responseData.message }
+        return { success: true, data: responseData?.data, message: responseData?.message };
     }
 
 
