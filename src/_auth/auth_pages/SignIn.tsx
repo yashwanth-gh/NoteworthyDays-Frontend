@@ -58,6 +58,7 @@ const SignIn = () => {
 
     const existingAccount = await loginIntoAccount(values);
 
+
     if (!existingAccount.success) {
       return toast({
         title: "Error",
@@ -66,7 +67,6 @@ const SignIn = () => {
       });
     }
 
-    console.log(existingAccount.data);
 
     const newUserData:AuthState = {
       id:existingAccount.data?._id,

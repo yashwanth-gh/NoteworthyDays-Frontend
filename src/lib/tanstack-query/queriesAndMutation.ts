@@ -1,7 +1,8 @@
 import authFunctions from "@/api/authApi/auth";
+import userFunctions from "@/api/userApi/user";
 import { IExistingUser, INewUser } from "@/types";
 import {
-    useMutation
+    useMutation, useQuery
 } from "@tanstack/react-query";
 
 // *******************MUTATIONS******************
@@ -31,3 +32,4 @@ export const useResetforgottenPassword = ()=>{
         mutationFn: ({ resetToken, password }: { resetToken: string, password: string }) => authFunctions.resetforgottenPassword({ resetToken, password })
     })
 }
+

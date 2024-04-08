@@ -8,10 +8,10 @@ import { store } from "./redux/store.ts";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <BrowserRouter>
-    <Provider store={store}>
-      <QueryProvider>
+    <QueryProvider>
+      <Provider store={store}>
         <App />
-      </QueryProvider>
-    </Provider>
+      </Provider>
+    </QueryProvider>
   </BrowserRouter>
 );

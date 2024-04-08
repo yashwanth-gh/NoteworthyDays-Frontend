@@ -1,6 +1,12 @@
 import { Route, Routes } from "react-router-dom";
 import RootLayout from "./_root/RootLayout";
-import { Account, Home, Missing, Unauthorized } from "./_root/root_pages";
+import {
+  Account,
+  Home,
+  Missing,
+  PersistLogin,
+  Unauthorized,
+} from "./_root/root_pages";
 import AuthLayout from "./_auth/AuthLayout";
 import {
   ForgotPasswordPage,
@@ -22,16 +28,16 @@ function App() {
           <Route path="/signin" element={<SignIn />} />
           <Route path="/forgotPassword" element={<ForgotPasswordPage />} />
           <Route path="/resetPassword" element={<ResetPassword />} />
-          {/* Unauthorized Route */}
           <Route path="/unauthorized" element={<Unauthorized />} />
         </Route>
 
         {/* SECURE ROUTES */}
-        <Route element={<RootLayout />}>
-          <Route index element={<Home />} />
-          <Route path="/account" element={<Account />} />
-          {/* Missing Route */}
-          <Route path="*" element={<Missing />} />
+        <Route element={<PersistLogin />}>
+          <Route element={<RootLayout />}>
+            <Route index element={<Home />} />
+            <Route path="/account" element={<Account />} />
+            <Route path="*" element={<Missing />} />
+          </Route>
         </Route>
       </Routes>
       <Toaster />

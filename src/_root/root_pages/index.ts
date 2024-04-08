@@ -4,6 +4,7 @@ import Topbar from "./Topbar";
 import Bottombar from "./Bottombar";
 import Unauthorized from "./Unauthorized";
 import Missing from "./Missing";
+import PersistLogin from "./PersistLogin";
 
 export{
     Home,
@@ -11,5 +12,6 @@ export{
     Topbar,
     Bottombar,
     Missing,
-    Unauthorized
+    Unauthorized,
+    PersistLogin
 }

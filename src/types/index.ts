@@ -15,3 +15,13 @@ export type backendResponse = {
     success: boolean;
     message: string;
 }
+
+export type ApiResponse = {
+    success: boolean;
+    data: null;
+    message: string;
+} | {
+    success: boolean;
+    data: Record<string, any>;
+    message: string;
+}
