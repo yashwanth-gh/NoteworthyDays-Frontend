@@ -2,11 +2,12 @@ import React from 'react'
 
 const MiniLoader = () => {
   return (
-    <div className='flex-center w-full'>
-        <img src="/public/loader.svg"
+    <div className='flex justify-center items-center w-full'>
+        <img src="/public/loader1.svg"
+        className='miniloader'
          alt="loader_svg"
-         width={18}
-         height={18} />
+         width={30}
+         height={30} />
     </div>
   )
 }

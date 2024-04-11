@@ -1,15 +1,19 @@
 import React from 'react'
-import { Outlet } from 'react-router-dom'
+import { Outlet, useLocation } from 'react-router-dom'
 
 const AuthLayout = () => {
+  const location = useLocation();
+  let imageName = location.pathname.split('/')[1];
+  if(imageName==='signup' || imageName==='signin') imageName = 'sign';
+  
   return (
     <>
             <>
-            <section className='hidden justify-center items-center w-1/2  lg:block'>
+            <section className='hidden justify-center items-center w-1/2  lg:block auth-form'>
                 <img
-                    src="/public/party-planner.svg"
+                    src={`/public/${imageName}.svg`}
                     alt="shopping-illustration"
-                    className='h-auto w-auto object-cover bg-no-repeat '
+                    className='h-full w-full object-cover bg-no-repeat '
                 />
 
             </section>

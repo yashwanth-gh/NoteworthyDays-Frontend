@@ -46,8 +46,8 @@ const ResetPassword = () => {
     const res = await resetPassword({resetToken,password});
     if(res.success){
       toast({
-        title: "Password reset successfully",
-        description: "You can now login with your new password",
+        title: "🔑 Password reset successfully 🔒",
+        description: "You can now login with your new password😊",
       });
       navigate("/signin");
     }else{
@@ -135,7 +135,7 @@ if(isError){
             />
             <Button
               type="submit"
-              className="w-full text-white py-2 rounded-md mb-2"
+              className="w-full py-2 mb-2"
               disabled={isResetingPassword}
             >
               {isResetingPassword ? <MiniLoader/> : "Reset Password"}

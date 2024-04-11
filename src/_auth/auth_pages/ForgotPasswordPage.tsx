@@ -42,7 +42,7 @@ const ForgotPasswordPage = () => {
           });
     }else{
         toast({
-            title: "Success",
+            title: "🎉Success🎊",
             description: res.message,
           })
     }
@@ -120,7 +120,7 @@ const ForgotPasswordPage = () => {
             />
             <Button
               type="submit"
-              className="w-full text-white py-2 rounded-md mb-2 flex justify-center"
+              className="w-full py-2 mb-2 flex justify-center"
               disabled={isRequesting}
             >
               {isRequesting ? <MiniLoader/> : "Submit"}
@@ -132,7 +132,7 @@ const ForgotPasswordPage = () => {
         <Link to={"/signin"} className="w-full">
           <Button
             type="submit"
-            className="w-full bg-gray-600 hover:bg-black text-white py-2 rounded-md"
+            className="w-full bg-black hover:bg-black text-white py-2"
           >
             Cancel
           </Button>
