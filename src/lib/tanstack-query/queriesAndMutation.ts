@@ -32,4 +32,9 @@ export const useResetforgottenPassword = ()=>{
         mutationFn: ({ resetToken, password }: { resetToken: string, password: string }) => authFunctions.resetforgottenPassword({ resetToken, password })
     })
 }
+export const useLogoutOfAccount = ()=>{
+    return useMutation({
+        mutationFn: () => authFunctions.logout()
+    })
+}
 

@@ -37,9 +37,7 @@ export const appSlice = createSlice({
             state.accountStatus = action.payload.accountStatus;
         },
         clearAuth: (state) => {
-            state.fullName = '';
-            state.email = '';
-            state.profilePicUrl = '';
+            Object.assign(state, initialState);
         }
     }
 })

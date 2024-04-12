@@ -19,7 +19,7 @@ import { Toaster } from "@/components/ui/toaster";
 
 function App() {
   return (
-    <main className="flex h-screen">
+    <main className="flex h-screen base-container">
       <Routes>
         {/* SIGN ROUTES */}
         <Route element={<AuthLayout />}>

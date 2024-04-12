@@ -2,7 +2,7 @@ import React from 'react'
 
 const Bottombar = () => {
   return (
-    <div>Bottombar</div>
+    <div className='pt-[520px]'>Bottombar</div>
   )
 }
 

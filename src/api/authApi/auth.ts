@@ -140,6 +140,21 @@ export class AuthFuctions {
         }
         return { success: true, data: null, message: responseData?.message };
     }
+
+    async logout(){
+        const config: AxiosRequestConfig = {
+            method: 'GET',
+            url: `/api/v1/auth/signout`
+        };
+
+        const response = await axiosRequest(config);
+        const responseData: backendResponse = response.data;
+
+        if (response.statusCode >= 400 && response.statusCode <= 500) {
+            return { success: false,data:null, message: response.error };
+        }
+        return { success: true, data: null, message: responseData?.message };
+    }
 }
 
 const authFunctions = new AuthFuctions();

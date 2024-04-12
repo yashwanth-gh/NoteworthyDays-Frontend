@@ -24,12 +24,13 @@ const PersistLogin = () => {
       if (response.success === false) {
         if (response.message === "REFRESH ACCESS TOKEN") {
           // SHOULD REFRESH ACCESS TOKEN
+          console.log("REFRESHing ACCESS TOKEN");
           const isRefreshed = await authFunctions.refreshAccessToken();
           return isRefreshed;
         } else if (response.message === "REDIRECT TO SIGNIN") {
-          navigate("/signin", { state: { from: location } });
+          if(location.pathname!='/')navigate("/signin", { state: { from: location } });
         } else {
-          navigate("/signup", { state: { from: location } });
+          if(location.pathname!='/')navigate("/signup", { state: { from: location } });
         }
       } else {
         // NOT REQUIRED TO REFRESH
@@ -40,9 +41,10 @@ const PersistLogin = () => {
     const handleRefreshResponse = async (response: ApiResponse) => {
       if (response?.success === true && !response?.data) {
         // REFRESHING TOKEN
+        console.log("REFRESHed TOKEN");
         return await userFunctions.getUserDetails();
       } else if (response?.success === false && !response?.data) {
-        navigate("/signin", { state: { from: location } });
+        if(location.pathname!='/')navigate("/signin", { state: { from: location } });
       } else {
         // NOT REFRESHING TOKEN
         return response;

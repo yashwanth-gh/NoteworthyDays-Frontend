@@ -51,7 +51,7 @@
 
 @layer base {
   * {
-    @apply border-border;
+    @apply border-border custom-scrollbar;
   }
   body {
     @apply bg-background text-foreground;
@@ -79,7 +79,7 @@
   }
 
   .topbar {
-    @apply flex justify-between items-center bg-transparent py-4 max-w-7xl sticky top-0 z-50;
+    @apply flex justify-between items-center bg-transparent py-4 max-w-7xl;
   }
 
   .bottombar {
@@ -87,15 +87,56 @@
   }
 
   .base-container {
-    @apply px-2 md:px-8 custom-scrollbar max-w-7xl mx-auto;
+    @apply px-2 md:px-8  max-w-7xl mx-auto overflow-x-clip;
   }
 
   .password-vis {
-    @apply text-red-600;
+    @apply text-primary;
   }
 
-  .mobile-menu{
+  .mobile-menu {
     @apply md:hidden mr-4;
+  }
+
+  .title-cont {
+    @apply w-full min-h-screen md:min-h-[90vh] -skew-y-3;
+  }
+
+  .center {
+    @apply flex md:justify-center justify-start items-center flex-col pt-14 md:pt-2;
+  }
+
+  .tag1 {
+    @apply bg-primary z-10;
+  }
+
+  .tag2 {
+    @apply bg-black z-20 text-primary;
+  }
+
+  .tag3 {
+    @apply bg-primary z-30;
+  }
+}
+
+.title {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 650px;
+  font-size: 2rem;
+  line-height: 2;
+  text-shadow: 0px 10px 4px rgba(0, 0, 0, 0.3);
+  letter-spacing: 1px;
+  /* text-align: center; */
+  box-shadow: 0 10px 4px rgba(0, 0, 0, 0.5), 0 10px 4px rgba(0, 0, 0, 0.5);
+}
+@media (min-width: 768px) {
+  .title {
+    font-size: 5.5rem;
+    letter-spacing: -3px;
+    width: 3500px; /* FIXME:IF ANY ERRROR HAPPENS CHANGE TO 100% */
+    line-height: 1.25;
   }
 }
 
@@ -126,10 +167,18 @@
 .miniloader {
   animation: rotate360 3s linear infinite; /* Adjust the duration (4s) for medium speed */
 }
+
 .nothing-you-could-do-regular {
   font-family: "Nothing You Could Do", cursive;
   font-weight: 600;
   letter-spacing: 1px;
+  font-style: normal;
+}
+
+.oswald-title {
+  font-family: "Oswald", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
   font-style: normal;
 }
 

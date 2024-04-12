@@ -23,13 +23,13 @@ const CustomAlertDialog = ({ open, setOpen, OkFunction,dialogTitle,dialogDescrip
     <AlertDialog open={open} onOpenChange={setOpen}>
       <AlertDialogContent className="bg-background border border-primary">
         <AlertDialogHeader>
-          <AlertDialogTitle><h2>{`${dialogTitle}`}</h2></AlertDialogTitle>
+          <AlertDialogTitle>{`${dialogTitle}`}</AlertDialogTitle>
           <AlertDialogDescription className="text-black">
             {`${dialogDescription}`}
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel className="text-white bg-black border-none">Cancel</AlertDialogCancel>
+          <AlertDialogCancel className="text-white bg-black border-none hover:bg-black/70 hover:text-white">Cancel</AlertDialogCancel>
           <AlertDialogAction onClick={OkFunction} className="bg-primary text-black ">Continue</AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
