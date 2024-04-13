@@ -22,6 +22,7 @@ const Topbar = () => {
     const res = await logout();
 
     if (!res.success) {
+      console.log(res)
       return toast({
         title: "Error",
         description: res.message,

@@ -32,7 +32,7 @@ export class AuthFuctions {
         if (response.statusCode >= 400 && response.statusCode <= 500) {
             return { success: false, message: response.error };
         }
-        
+
 
         // Send OTP to user
         const receivedEmailFromServer: string = newUser.data.email;
@@ -126,7 +126,7 @@ export class AuthFuctions {
         return { success: true, data: responseData?.data, message: responseData?.message };
     }
 
-    async refreshAccessToken(){
+    async refreshAccessToken() {
         const config: AxiosRequestConfig = {
             method: 'GET',
             url: `/api/v1/auth/refresh-access-token`
@@ -136,24 +136,47 @@ export class AuthFuctions {
         const responseData: backendResponse = response.data;
 
         if (response.statusCode >= 400 && response.statusCode <= 500) {
-            return { success: false,data:null, message: response.error };
+            return { success: false, data: null, message: response.error };
         }
         return { success: true, data: null, message: responseData?.message };
     }
 
-    async logout(){
+    async logout() {
+
         const config: AxiosRequestConfig = {
             method: 'GET',
             url: `/api/v1/auth/signout`
         };
 
-        const response = await axiosRequest(config);
-        const responseData: backendResponse = response.data;
+        let maxTries = 3;
+        let thisFunctionReturn = { success: false, data: null, message: '' };
+        let isRefreshed = false;
 
-        if (response.statusCode >= 400 && response.statusCode <= 500) {
-            return { success: false,data:null, message: response.error };
+        while (maxTries > 0) {
+            const response = await axiosRequest(config);
+            const responseData: backendResponse = response.data;
+
+            if (response.statusCode >= 400 && response.statusCode <= 500 || !response.success) {
+                console.log("Refreshing Access Token");
+                isRefreshed = await this.handleAccessTokenExpired();
+                if(isRefreshed)continue;
+                thisFunctionReturn = { success: false, data: null, message: response.error };
+                maxTries--;
+            } else {
+                thisFunctionReturn = { success: true, data: null, message: responseData?.message };
+                break;
+            }
         }
-        return { success: true, data: null, message: responseData?.message };
+
+        return thisFunctionReturn;
+    }
+
+    async handleAccessTokenExpired() {
+        const tokenRefreshRes = await this.refreshAccessToken();
+        if (tokenRefreshRes.success) {
+            return true;
+        }
+        return false;
     }
 }
 
