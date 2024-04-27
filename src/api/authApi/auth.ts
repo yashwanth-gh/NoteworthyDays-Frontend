@@ -30,7 +30,7 @@ export class AuthFuctions {
         // Handle the response data
         const newUser: backendResponse = response.data;
         if (response.statusCode >= 400 && response.statusCode <= 500) {
-            return { success: false, message: response.error };
+            return { success: false, statusCode: response.statusCode, message: response.error };
         }
 
 
@@ -38,10 +38,10 @@ export class AuthFuctions {
         const receivedEmailFromServer: string = newUser.data.email;
         const isOtpSent = await this.sendOtpToVerifyNewAccount(receivedEmailFromServer);
         if (!isOtpSent.success) {
-            return { success: false, message: isOtpSent.message };
+            return { success: false, statusCode: response.statusCode, message: isOtpSent.message };
         }
 
-        return { success: true, message: isOtpSent.message };
+        return { success: true, statusCode: response.statusCode, message: isOtpSent.message };
     }
 
     async sendOtpToVerifyNewAccount(email: string) {
@@ -56,9 +56,9 @@ export class AuthFuctions {
         const responseData: backendResponse = response.data;
 
         if (response.statusCode >= 400 && response.statusCode <= 500) {
-            return { success: false, message: response.error };
+            return { success: false, statusCode: response.statusCode, message: response.error };
         }
-        return { success: true, data: responseData?.data, message: responseData?.message };
+        return { success: true, statusCode: response.statusCode, data: responseData?.data, message: responseData?.message };
     }
 
     async verifySentOtp({ email, otp }: { email: string, otp: string }) {
@@ -72,9 +72,9 @@ export class AuthFuctions {
         const responseData: backendResponse = response.data;
 
         if (response.statusCode >= 400 && response.statusCode <= 500) {
-            return { success: false, message: response.error };
+            return { success: false, statusCode: response.statusCode, message: response.error };
         }
-        return { success: true, data: responseData?.data, message: responseData?.message };
+        return { success: true, statusCode: response.statusCode, data: responseData?.data, message: responseData?.message };
     }
 
     async forgotPassword(email: string) {
@@ -89,9 +89,9 @@ export class AuthFuctions {
         const responseData: backendResponse = response.data;
 
         if (response.statusCode >= 400 && response.statusCode <= 500) {
-            return { success: false, message: response.error };
+            return { success: false, statusCode: response.statusCode, message: response.error };
         }
-        return { success: true, data: responseData?.data, message: responseData?.message };
+        return { success: true, statusCode: response.statusCode, data: responseData?.data, message: responseData?.message };
     }
 
     async resetforgottenPassword({ resetToken, password }: { resetToken: string, password: string }) {
@@ -105,9 +105,9 @@ export class AuthFuctions {
         const responseData: backendResponse = response.data;
 
         if (response.statusCode >= 400 && response.statusCode <= 500) {
-            return { success: false, message: response.error };
+            return { success: false, statusCode: response.statusCode, message: response.error };
         }
-        return { success: true, data: responseData?.data, message: responseData?.message };
+        return { success: true, statusCode: response.statusCode, data: responseData?.data, message: responseData?.message };
     }
 
     async login(loginData: IExistingUser) {
@@ -121,9 +121,12 @@ export class AuthFuctions {
         const responseData: backendResponse = response.data;
 
         if (response.statusCode >= 400 && response.statusCode <= 500) {
-            return { success: false, message: response.error };
+            if (response.statusCode === 403 || response.statusCode === 404) {
+                return { success: false, statusCode: response.statusCode, message: "Invalid Credentials" };
+            }
+            return { success: false, statusCode: response.statusCode, message: response.error };
         }
-        return { success: true, data: responseData?.data, message: responseData?.message };
+        return { success: true, statusCode: response.statusCode, data: responseData?.data, message: responseData?.message };
     }
 
     async refreshAccessToken() {
@@ -136,9 +139,9 @@ export class AuthFuctions {
         const responseData: backendResponse = response.data;
 
         if (response.statusCode >= 400 && response.statusCode <= 500) {
-            return { success: false, data: null, message: response.error };
+            return { success: false, statusCode: response.statusCode, data: null, message: response.error };
         }
-        return { success: true, data: null, message: responseData?.message };
+        return { success: true, statusCode: response.statusCode, data: null, message: responseData?.message };
     }
 
     async logout() {
@@ -159,7 +162,7 @@ export class AuthFuctions {
             if (response.statusCode >= 400 && response.statusCode <= 500 || !response.success) {
                 console.log("Refreshing Access Token");
                 isRefreshed = await this.handleAccessTokenExpired();
-                if(isRefreshed)continue;
+                if (isRefreshed) continue;
                 thisFunctionReturn = { success: false, data: null, message: response.error };
                 maxTries--;
             } else {
@@ -177,6 +180,34 @@ export class AuthFuctions {
             return true;
         }
         return false;
+    }
+
+    async createNewAdminAccount(userData: INewUser) {
+
+        const config: AxiosRequestConfig = {
+            method: 'POST',
+            url: '/api/v1/auth/admin/register',
+            data: userData
+        };
+
+        // Make a POST request to the '/signup' endpoint using the axiosRequest wrapper
+        const response = await axiosRequest(config);
+
+        // Handle the response data
+        const newUser: backendResponse = response.data;
+        if (response.statusCode >= 400 && response.statusCode <= 500) {
+            return { success: false, statusCode: response.statusCode, message: response.error };
+        }
+
+
+        // Send OTP to user
+        const receivedEmailFromServer: string = newUser.data.email;
+        const isOtpSent = await this.sendOtpToVerifyNewAccount(receivedEmailFromServer);
+        if (!isOtpSent.success) {
+            return { success: false, statusCode: isOtpSent.statusCode, message: isOtpSent.message };
+        }
+
+        return { success: true, message: isOtpSent.message };
     }
 }
 

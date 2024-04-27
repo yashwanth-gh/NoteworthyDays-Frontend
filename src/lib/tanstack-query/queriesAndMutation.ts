@@ -7,34 +7,40 @@ import {
 
 // *******************MUTATIONS******************
 
-export const useCreateNewAccount = ()=>{
+export const useCreateNewAccount = () => {
     return useMutation({
         mutationFn: (userData: INewUser) => authFunctions.createNewAccount(userData)
     })
 }
-export const useLoginIntoExistingAccount = ()=>{
+export const useLoginIntoExistingAccount = () => {
     return useMutation({
         mutationFn: (loginData: IExistingUser) => authFunctions.login(loginData)
     })
 }
-export const useVerifyOTP = ()=>{
+export const useVerifyOTP = () => {
     return useMutation({
-        mutationFn: ({email,otp}:{email:string,otp:string}) => authFunctions.verifySentOtp({email,otp})
+        mutationFn: ({ email, otp }: { email: string, otp: string }) => authFunctions.verifySentOtp({ email, otp })
     })
 }
-export const useForgotPassword = ()=>{
+export const useForgotPassword = () => {
     return useMutation({
-        mutationFn: (email:string) => authFunctions.forgotPassword(email)
+        mutationFn: (email: string) => authFunctions.forgotPassword(email)
     })
 }
-export const useResetforgottenPassword = ()=>{
+export const useResetforgottenPassword = () => {
     return useMutation({
         mutationFn: ({ resetToken, password }: { resetToken: string, password: string }) => authFunctions.resetforgottenPassword({ resetToken, password })
     })
 }
-export const useLogoutOfAccount = ()=>{
+export const useLogoutOfAccount = () => {
     return useMutation({
         mutationFn: () => authFunctions.logout()
+    })
+}
+
+export const useCreateNewAdminAccount = () => {
+    return useMutation({
+        mutationFn: (userData: INewUser) => authFunctions.createNewAdminAccount(userData)
     })
 }
 

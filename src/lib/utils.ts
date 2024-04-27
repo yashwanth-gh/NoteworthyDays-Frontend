@@ -25,7 +25,7 @@ export async function axiosRequest(config: AxiosRequestConfig) {
 
   } catch (error: any) {
     // Handle error
-    let statusCode:number;
+    let statusCode: number;
 
     if (error.response) {
       // The request was made and the server responded with a status code

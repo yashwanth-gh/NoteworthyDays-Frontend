@@ -1,5 +1,12 @@
 import { Route, Routes } from "react-router-dom";
 import RootLayout from "./_root/RootLayout";
+import AuthLayout from "./_auth/AuthLayout";
+import AdminAuthLayout from "./_auth/AdminAuthLayout";
+import {
+  AdminEmailVerify,
+  AdminSignIn,
+  AdminSignUp,
+} from "./_auth/admin_auth_pages";
 import {
   Account,
   Home,
@@ -7,7 +14,6 @@ import {
   PersistLogin,
   Unauthorized,
 } from "./_root/root_pages";
-import AuthLayout from "./_auth/AuthLayout";
 import {
   ForgotPasswordPage,
   ResetPassword,
@@ -21,7 +27,7 @@ function App() {
   return (
     <main className="flex h-screen base-container">
       <Routes>
-        {/* SIGN ROUTES */}
+        {/* USER SIGN ROUTES */}
         <Route element={<AuthLayout />}>
           <Route path="/signup" element={<SignUp />} />
           <Route path="/verify-email" element={<VerifyOTP />} />
@@ -30,8 +36,15 @@ function App() {
           <Route path="/resetPassword" element={<ResetPassword />} />
           <Route path="/unauthorized" element={<Unauthorized />} />
         </Route>
+        {/* ADMIN SIGN ROUTES */}
+        <Route element={<AdminAuthLayout />}>
+          <Route path="/admin/signup" element={<AdminSignUp />} />
+          <Route path="/admin/signin" element={<AdminSignIn />} />
+          <Route path="/admin/verify" element={<AdminEmailVerify />} />
+          <Route path="/admin/unauthorized" element={<Unauthorized />} />
+        </Route>
 
-        {/* SECURE ROUTES */}
+        {/* USER SECURE ROUTES */}
         <Route element={<PersistLogin />}>
           <Route element={<RootLayout />}>
             <Route index element={<Home />} />
