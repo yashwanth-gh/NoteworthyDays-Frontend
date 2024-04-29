@@ -2,19 +2,17 @@ import { conf } from "@/conf/conf";
 import { axiosRequest } from "@/lib/utils";
 import { backendResponse } from "@/types";
 import { AxiosRequestConfig } from "axios";
-import authFunctions from "../authApi/auth";
 
-
-export class UserFunctions {
+export class AdminFunctions {
     endpoint;
     constructor() {
         this.endpoint = conf.serverEndpoint;
     }
 
-    async getUserDetails() {
+    async getAdminDetails() {
         const config: AxiosRequestConfig = {
             method: 'GET',
-            url: `/api/v1/auth/getuser`
+            url: `/api/v1/admin/getadmin-details`
         };
 
         const response = await axiosRequest(config);
@@ -27,6 +25,8 @@ export class UserFunctions {
             // Bad request, redirect to signin page
             // maybe no cookie found, or token are invalid
             return { success: false, statusCode: response.statusCode, data: null, message: "REDIRECT TO SIGNIN" }
+        } else if (response.statusCode === 403) {
+            return { success: false, statusCode: response.statusCode, data: null, message: "NO ACCESS TO ADMIN PRIVILEGES" }
         } else if (response.statusCode === 404) {
             // 404 user Not found, redirect to signUp page
             return { success: false, statusCode: response.statusCode, data: null, message: "REDIRECT TO SIGNUP" }
@@ -34,9 +34,7 @@ export class UserFunctions {
 
         return { success: true, statusCode: response.statusCode, data: responseData?.data, message: responseData?.message };
     }
-
 }
 
-const userFunctions = new UserFunctions();
-
-export default userFunctions;
+const adminFunctions = new AdminFunctions();
+export default adminFunctions;

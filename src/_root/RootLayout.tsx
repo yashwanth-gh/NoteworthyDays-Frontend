@@ -1,5 +1,5 @@
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
-import { Bottombar, Topbar } from "./root_pages";
+import { Bottombar, Topbar } from "./user_root_pages";
 import { useAppSelector } from "@/redux/hooks";
 
 /* Use conditional rendering To check if the user is logged in Or not By using the hook Called 
@@ -15,7 +15,7 @@ by remembering it
 const RootLayout = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const isAuthenticated = useAppSelector(state=>state.auth.isLoggedIn)
+  const isAuthenticated = useAppSelector((state) => state.auth.isLoggedIn);
   if (location.pathname != "/" && !isAuthenticated)
     navigate("/signin", {
       state: { from: location },

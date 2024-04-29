@@ -44,3 +44,8 @@ export const useCreateNewAdminAccount = () => {
     })
 }
 
+export const useAdminLogin = () => {
+    return useMutation({
+        mutationFn: (loginData: IExistingUser) => authFunctions.adminLogin(loginData)
+    })
+}

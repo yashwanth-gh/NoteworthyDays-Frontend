@@ -5,27 +5,27 @@ import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
-  FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { SigninValidation } from "@/lib/validations";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useToast } from "@/components/ui/use-toast";
 import { useAppDispatch } from "@/redux/hooks";
 import { useEffect, useRef, useState } from "react";
 import MiniLoader from "@/components/shared/MiniLoader";
+import { useAdminLogin } from "@/lib/tanstack-query/queriesAndMutation";
+import { AuthState, setAuth } from "@/redux/slices/authSlice";
 
 const AdminSignIn = () => {
   const emailFocusRef = useRef<HTMLInputElement | null>(null);
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+  const { mutateAsync: loginAdmin, isPending: isLogginIntoAccount } =
+    useAdminLogin();
 
-  const location = useLocation();
   const navigate = useNavigate();
-  const fromLocation = location.state?.from?.pathname || "/";
   const { toast } = useToast();
   const dispatch = useAppDispatch();
 
@@ -43,10 +43,40 @@ const AdminSignIn = () => {
     },
   });
 
-  function onSubmit(values: z.infer<typeof SigninValidation>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    console.log(values);
+  async function onSubmit(values: z.infer<typeof SigninValidation>) {
+    if (!values) return;
+
+    const existingAccount = await loginAdmin(values);
+
+    if (!existingAccount.success && existingAccount.statusCode === 403) {
+      return toast({
+        title: "Error",
+        description: "Incorrect credentials",
+        variant: "destructive",
+      });
+    } else if (!existingAccount.success) {
+      return toast({
+        title: "Error",
+        description: `This could have happened :  
+        1. This is only for Admin login
+        2. You account is not verified by a admin yet!`,
+        variant: "destructive",
+      });
+    }
+
+    const newUserData: AuthState = {
+      id: existingAccount.data?._id,
+      fullName: existingAccount.data?.fullName,
+      email: existingAccount.data?.email,
+      profilePicUrl:
+        existingAccount.data?.profilePictureUrl || "/public/defaultProfile.svg",
+      isLoggedIn: true,
+      isVerified: existingAccount.data?.is_email_verified,
+      role: existingAccount.data?.role?.role_type,
+      accountStatus: existingAccount.data?.account_status,
+    };
+    dispatch(setAuth(newUserData));
+    navigate("/admin/home");
   }
 
   const { formState } = form;
@@ -143,9 +173,9 @@ const AdminSignIn = () => {
           <Button
             type="submit"
             className="w-full"
-            // disabled={isLogginIntoAccount}
+            disabled={isLogginIntoAccount}
           >
-            {!true ? "Sign in" : <MiniLoader />}
+            {!isLogginIntoAccount ? "Sign in" : <MiniLoader />}
           </Button>
         </form>
       </Form>

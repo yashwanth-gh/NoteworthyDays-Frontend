@@ -209,6 +209,25 @@ export class AuthFuctions {
 
         return { success: true, message: isOtpSent.message };
     }
+
+    async adminLogin(loginData: IExistingUser) {
+        const config: AxiosRequestConfig = {
+            method: 'POST',
+            url: `/api/v1/auth/admin/signin`,
+            data: loginData
+        };
+
+        const response = await axiosRequest(config);
+        const responseData: backendResponse = response.data;
+
+        if (response.statusCode >= 400 && response.statusCode <= 500) {
+            if (response.statusCode === 403 || response.statusCode === 404) {
+                return { success: false, statusCode: response.statusCode, message: "Invalid Credentials" };
+            }
+            return { success: false, statusCode: response.statusCode, message: response.error };
+        }
+        return { success: true, statusCode: response.statusCode, data: responseData?.data, message: responseData?.message };
+    }
 }
 
 const authFunctions = new AuthFuctions();
