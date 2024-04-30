@@ -28,9 +28,11 @@ const PersistLogin = () => {
           const isRefreshed = await authFunctions.refreshAccessToken();
           return isRefreshed;
         } else if (response.message === "REDIRECT TO SIGNIN") {
-          if(location.pathname!='/')navigate("/signin", { state: { from: location } });
+          if (location.pathname != "/")
+            navigate("/signin", { state: { from: location } });
         } else {
-          if(location.pathname!='/')navigate("/signup", { state: { from: location } });
+          if (location.pathname != "/")
+            navigate("/signup", { state: { from: location } });
         }
       } else {
         // NOT REQUIRED TO REFRESH
@@ -44,7 +46,8 @@ const PersistLogin = () => {
         console.log("REFRESHed TOKEN");
         return await userFunctions.getUserDetails();
       } else if (response?.success === false && !response?.data) {
-        if(location.pathname!='/')navigate("/signin", { state: { from: location } });
+        if (location.pathname != "/")
+          navigate("/signin", { state: { from: location } });
       } else {
         // NOT REFRESHING TOKEN
         return response;
@@ -65,34 +68,31 @@ const PersistLogin = () => {
       } catch (error) {
         console.error("Error:", error);
         navigate("/unauthorized");
-      }finally{
+      } finally {
         setIsLoading(false);
       }
     };
 
-    fetchData()
-    .then(res=>{
-        const existingAccount = res;
-        if(!existingAccount) return;
-        const newUserData:AuthState = {
-            id:existingAccount.data?._id,
-            fullName:existingAccount.data?.fullName,
-            email:existingAccount.data?.email,
-            profilePicUrl:existingAccount.data?.profilePictureUrl || '/public/defaultProfile.svg',
-            isLoggedIn:true,
-            isVerified:existingAccount.data?.is_email_verified,
-            role:existingAccount.data?.role?.role_type,
-            accountStatus:existingAccount.data?.account_status
-          }
-          dispatch(setAuth(newUserData))
-    })
+    fetchData().then((res) => {
+      const existingAccount = res;
+      if (!existingAccount) return;
+      const newUserData: AuthState = {
+        id: existingAccount.data?._id,
+        fullName: existingAccount.data?.fullName,
+        email: existingAccount.data?.email,
+        profilePicUrl:
+          existingAccount.data?.profilePictureUrl ||
+          "/public/defaultProfile.svg",
+        isLoggedIn: true,
+        isVerified: existingAccount.data?.is_email_verified,
+        role: existingAccount.data?.role?.role_type,
+        accountStatus: existingAccount.data?.account_status,
+      };
+      dispatch(setAuth(newUserData));
+    });
   }, []);
 
-  return (
-  <>
-    {isLoading ? <Loader/> : <Outlet/>}
-  </>
-  );
+  return <>{isLoading ? <Loader /> : <Outlet />}</>;
 };
 
 export default PersistLogin;

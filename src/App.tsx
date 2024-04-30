@@ -29,6 +29,7 @@ function App() {
   return (
     <main className="flex h-screen base-container">
       <Routes>
+        <Route path="/unauthorized" element={<Unauthorized />} />
         <Route>
           {/* USER SIGN ROUTES */}
           <Route element={<AuthLayout />}>
@@ -37,7 +38,7 @@ function App() {
             <Route path="/signin" element={<SignIn />} />
             <Route path="/forgotPassword" element={<ForgotPasswordPage />} />
             <Route path="/resetPassword" element={<ResetPassword />} />
-            <Route path="/unauthorized" element={<Unauthorized />} />
+            {/* <Route path="/unauthorized" element={<Unauthorized />} /> */}
           </Route>
 
           {/* USER SECURE ROUTES */}
@@ -56,13 +57,14 @@ function App() {
             <Route path="signup" element={<AdminSignUp />} />
             <Route path="signin" element={<AdminSignIn />} />
             <Route path="verify" element={<AdminEmailVerify />} />
-            <Route path="unauthorized" element={<Unauthorized />} />
+            {/* <Route path="unauthorized" element={<Unauthorized />} /> */}
           </Route>
 
           {/* ADMIN SECURE ROUTES */}
           <Route element={<PersistAdminLogin />}>
             <Route path="/admin/*" element={<AdminRootLayout />}>
               <Route path="home" element={<AdminHome />} />
+              <Route path="*" element={<Missing />} />
             </Route>
           </Route>
         </Route>

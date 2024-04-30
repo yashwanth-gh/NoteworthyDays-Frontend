@@ -1,9 +1,7 @@
-import React from 'react'
+import React from "react";
 
 const Bottombar = () => {
-  return (
-    <div className='pt-[520px]'>Bottombar</div>
-  )
-}
+  return <div className="">Bottombar</div>;
+};
 
-export default Bottombar
+export default Bottombar;

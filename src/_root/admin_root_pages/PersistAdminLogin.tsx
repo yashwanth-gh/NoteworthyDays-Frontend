@@ -23,7 +23,7 @@ const PersistAdminLogin = () => {
         } else if (response.message === "REDIRECT TO SIGNIN") {
           navigate("/admin/signin", { state: { from: location } });
         } else if (response.message === "NO ACCESS TO ADMIN PRIVILEGES") {
-          navigate("/admin/unauthorized");
+          navigate("/unauthorized");
         } else {
           navigate("/admin/signup", { state: { from: location } });
         }
@@ -59,7 +59,7 @@ const PersistAdminLogin = () => {
         return handledRefreshResponse;
       } catch (error) {
         console.error("Error:", error);
-        navigate("/admin/unauthorized");
+        navigate("/unauthorized");
       } finally {
         setIsLoading(false);
       }
